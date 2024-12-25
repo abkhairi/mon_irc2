@@ -115,6 +115,33 @@ void serverr::handeler_authen_and_commande(std::string cmd_final,size_t &_index_
         else if(vec_of_commande[0] == "nick")
         {
             // change nick the user
+            //  flag = 1;
+            // int res = checkNick(getClientitoByIndex(i-1));
+            // if (res == 0 || res == 1 || res == 3) 
+            // {
+            //     if (res == 0) 
+            //     {
+            //         sen(getClientitoByIndex(i-1).getClinetFd(), RPL_ERRONEUSNICKNAME(host, nick));
+            //     }
+            // }
+            // else
+            // {
+            //     if (args.size() < 2 || args[1] == ":")
+            //         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NONICKNAMEGIVEN(nick, host));
+            //     else 
+            //     {
+            //             std::string o = getClientitoByIndex(i-1).getNickName();
+            //             std::vector<std::string> vec = x.getChannels();
+            //             getClientitoByIndex(i-1).setNickName(args[1]);
+            //             std::vector<std::string>::iterator it = vec.begin();
+            //             for(; it != vec.end(); it++) {
+            //                 Channel & chan = getChannel(*it);
+            //                 chan.updateNickname(args[1],o,chan.getPrvBynickname(o), getClientitoByIndex(i-1));
+            //                 SendToAll(chan, NICKNAME_RPLY(o,getClientitoByIndex(i-1).getUserName(),host,args[1]));
+            //             }
+            //             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NICKCHANGE(o,args[1],host));
+            //     }
+            // }
         }
         else
         {

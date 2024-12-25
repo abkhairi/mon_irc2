@@ -125,7 +125,18 @@ void serverr::ft_commande_j_m(std::vector<std::string> vec_cmd, size_t &_index_c
         {
             invite(vec_cmd, _index_client, client_);
         }
+        else if (cmd == "mode")
+        {
+            mode(vec_cmd, _index_client, client_);
+        }
+        else if (cmd == "part")
+        {
+            part(vec_cmd, _index_client, client_);
+        }
     }
     else
         send_msg_to_clinet(client_.get_client_fd(), ERR_ALREADYREGISTERED(client_.get_nickname(), host_ip));
 }   
+
+
+

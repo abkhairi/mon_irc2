@@ -4,7 +4,10 @@ CC     = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRC    = main.cpp utilis.cpp client.cpp server.cpp authentication.cpp ft_handle_cmd.cpp channels.cpp ./commande/kick.cpp ./commande/topic.cpp ./commande/join.cpp ./commande/privmsg.cpp ./commande/quit.cpp ./commande/invite.cpp
+SRC    = main.cpp utilis.cpp client.cpp server.cpp authentication.cpp ft_handle_cmd.cpp channels.cpp \
+		./commande/kick.cpp ./commande/topic.cpp ./commande/join.cpp ./commande/privmsg.cpp \
+		./commande/quit.cpp ./commande/invite.cpp ./commande/mode.cpp ./commande/part.cpp \
+	
 OBJ    = $(SRC:.cpp=.o)
 
  

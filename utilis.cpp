@@ -47,3 +47,21 @@ std::string to_lower(std::string str)
         str[i] = tolower(str[i]); 
     return (str);
 }
+
+// int serverr::checkNick(cliente& client) 
+// {
+//     std::string str = "@&#:1234567890";
+//     std::string s = "_";
+//     for(size_t i = 0; i < _clients.size(); i++) 
+//     {
+//         if(vec_of_cm[1] == _clients[i].getNickName()) {
+//             send(client.getClinetFd(), ERR_NICKNAMEINUSE(args[1]));
+//             return 1;
+//         }
+//     }
+//     if(str.find(args[1][0]) != std::string::npos)
+//         return 0;
+//     if(s.find(args[1][strlen(args[1].c_str()) - 1]) != std::string::npos)
+//         return 3;
+//     return 2;
+// }

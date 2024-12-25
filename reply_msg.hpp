@@ -14,11 +14,13 @@
 #define RPL_JOIN(nick, username, channelname, ipaddress)                    ":" + nick + "!~" + username + "@" + ipaddress + " JOIN " + channelname + "\r\n"
 #define RPL_NAMREPLY(hostname, clients, channelname, nick)                  ":" + hostname + " 353 " + nick + " = " + channelname + " :" + clients + "\r\n"
 #define RPL_ENDOFNAMES(hostname, nick, channelname)                         ":" + hostname + " 366 " + nick + " " + channelname + " :END of /NAMES list\r\n"
+#define ERR_UNKNOWNMODE(host, nick, modechar)                                ":" + host + " 472 " + nick + " " + modechar + " :is unknown mode char to me\r\n"
 
 
 #define ERR_BADCHANNELKEY(buffer, channel)  "475 " + buffer + " " + channel + " :Cannot join channel (+k)\r\n"
 
 #define ERR_NONICKNAMEGIVEN(nick, hostname) ":" + hostname + " 431 " + nick + " :No nickname given\r\n"
+#define RPL_PART(buffer,host,user, channel)                                 ":" + buffer + "!~" + user + "@" + host + " PART :" + channel + "\r\n" 
 
 #define RPL_WELCOME(nick, hostname)  ":" + hostname + " 001 " + nick + " :Welcome " + nick + " to the ft_irc network !\r\n"
 #define RPL_YOURHOST(nick, hostname) ":" + hostname + " 002 " + nick + " :Your host is " + hostname + " running version 1.0 !\r\n"

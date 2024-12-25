@@ -69,6 +69,38 @@ void    serverr::authenticate_client(std::string cmd, int socket_client, cliente
         return ;
 }
 
+void serverr::receive_cmd(int fd_client, size_t &_index_client, std::string &cmd)
+{
+    char buffer[1024];
+    memset(buffer, 0, 1024);
+    ssize_t bytes_received = recv(fd_client, buffer, sizeof(buffer) - 1, 0);
+    if(bytes_received == -1)
+        perror("recv");
+    else if (bytes_received == 0)
+    {
+        std::cout << "Client disconnected: " << fd_client << std::endl;
+        close(fd_client); // close the socket if not present program infinite loop infoi click sur c
+        vec_pollfd.erase(vec_pollfd.begin() + _index_client);
+        remove_Client(_index_client - 1);
+        remove_From_Channel(fd_client);
+        _index_client--;
+        std::map<std::string, channels>::iterator it = channels_.begin();
+        while (it != channels_.end())
+        {
+            if (it->second.get_size_user() == 0)
+                it = channels_.erase(it);
+            else
+                ++it;
+        }
+        return ;
+    }
+    else
+    {
+        buffer[bytes_received] = '\0'; // add null terminator if not present => display garbej value
+        cmd = buffer;
+    }
+}
+
 void    serverr::initializer_server(int  port, std::string pass, size_t &i)
 {
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -133,7 +165,8 @@ void    serverr::initializer_server(int  port, std::string pass, size_t &i)
                 {
                     // is a client here : is a handle new msg
                     int socket_client = vec_pollfd[i].fd;
-                    std::string cmd = receive_cmd(socket_client, i);
+                    std::string cmd ;
+                    receive_cmd(socket_client, i, cmd);
                     // std::cout << "cmd = " << cmd << std::endl;
                     // std::cout << "Message from client " << socket_client << ": " << cmd << std::endl;
                     cliente &client_ref = get_client_orgien(socket_client);
@@ -145,42 +178,6 @@ void    serverr::initializer_server(int  port, std::string pass, size_t &i)
     }
 }
 
-std::string serverr::receive_cmd(int fd_client, size_t &_index_client)
-{
-    char buffer[1024];
-    memset(buffer, 0, 1024);
-    ssize_t bytes_received = recv(fd_client, buffer, sizeof(buffer) - 1, 0);
-    if (bytes_received <= 0)
-    {
-        if (bytes_received == 0)
-        {
-            std::cout << "Client disconnected: " << fd_client << std::endl;
-            vec_pollfd.erase(vec_pollfd.begin() + _index_client);
-            _index_client--;
-        }
-        else
-            perror("recv");
-        close(fd_client); // close the socket if not present program infinite loop infoi click sur c
-        remove_Client(fd_client);
-        remove_From_Channel(fd_client);
-        _index_client--;
-        std::map<std::string, channels>::iterator it = channels_.begin();
-        while (it != channels_.end())
-        {
-            if (it->second.get_size_user() == 0)
-                it = channels_.erase(it);
-            else
-                ++it;
-        }
-        // std::cout << "heeeeeeeeere\n";
-        return "";
-    }
-    buffer[bytes_received] = '\0'; // add null terminator if not present => display garbej value
-    std::string message(buffer);
-    if (message == "\n")
-        return "";
-    return message;
-}
 
 void    serverr::display()
 {
@@ -253,4 +250,9 @@ void serverr::remove_From_Channel(int client_fd)
             }
         }
     }
+}
+
+void serverr::eraseChannel(std::string _name)
+{
+    channels_.erase(_name);
 }

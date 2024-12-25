@@ -33,6 +33,7 @@ class serverr
         std::string _pass;
         std::string host_ip;
         std::vector <cliente> vec_client;
+        std::vector<std::pair<std::string,std::string> > mod;
         serverr();
     public:
         size_t      _index_client;
@@ -51,7 +52,7 @@ class serverr
         void    authenticate_client(std::string cmd,int socket_client, cliente &clienteref, size_t &_index_client);
         void    display();
         void is_registre(cliente &client_, std::string time_);
-        std::string receive_cmd(int fd_client, size_t &_index_client);
+        void receive_cmd(int fd_client, size_t &_index_client, std::string &cmd);
         void handeler_authen_and_commande(std::string cmd_final,size_t &_index_client);
         void ft_commande_j_m(std::vector<std::string> cmd_final, size_t &_index_client, cliente &client_);
         bool is_membre(int fd_client, channels channel_);
@@ -62,6 +63,9 @@ class serverr
         void    remove_Client(int id);
         void    remove_From_Channel(int client_fd);
         void    sendMessage(cliente &client, std::string reciever, std::string _message);
+        int     modeSplit(std::string vec_cmd, size_t index, cliente client_);
+        void    eraseChannel(std::string _name);
+        // int     checkNick(cliente& client);
 
         // commande 
         void ft_join(std::vector<std::string> &vec_cmd,cliente &client_,size_t &_index_client);
@@ -70,6 +74,8 @@ class serverr
         void privmsg(std::vector<std::string > vec_cmd, size_t _indexclient, cliente client_);
         void quit(std::vector<std::string > vec_cmd, size_t _indexclient, cliente client_);
         void invite(std::vector<std::string > vec_cmd, size_t _indexclient, cliente client_);
+        void mode(std::vector<std::string > vec_cmd, size_t _index_client, cliente client_);
+        void part(std::vector<std::string> vec_cmd,size_t _index_client,cliente client_);
 
 };
 

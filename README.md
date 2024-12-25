@@ -73,3 +73,20 @@ Upon successful completion of the registration process, the server MUST send, in
    - RPL_YOURHOST (002),
    - RPL_CREATED (003),
    - RPL_MYINFO (004),
+
+
+La commande INVITE permet à un utilisateur (souvent un opérateur) d’inviter un autre utilisateur à rejoindre un canal.
+INVITE <nickname> <channel>
+
+La commande KICK permet à un opérateur de canal d’éjecter un utilisateur d’un canal.
+KICK <channel> <user> [<comment>]
+
+La commande TOPIC permet à un utilisateur (souvent un opérateur) de définir ou de consulter le sujet d’un canal.
+TOPIC <channel> [<topic>]
+
+La commande MODE permet de modifier ou de consulter les modes d’un canal. Les modes définissent certaines propriétés ou restrictions sur le canal.
+MODE <channel> <mode> [<parameters>]
+
+
+
+
