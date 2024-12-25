@@ -34,7 +34,8 @@ class channels
         void set_name_display(std::string name);
         void set_inv(bool in);
         void setTopic(std::string topic) ;
-        void  setTopicAttr(std::string topic, bool topc, std::string seter, std::string time);
+        void setinvited(int sockfd);
+        void setTopicAttr(std::string topic, bool topc, std::string seter, std::string time);
 
 
         //getter

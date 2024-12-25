@@ -47,6 +47,7 @@ void    serverr::authenticate_client(std::string cmd, int socket_client, cliente
 {
     for (size_t i = 0; i < cmd.size(); i++)
         cmd[i] = std::tolower(cmd[i]);
+    // pass abc
     std::stringstream ss(cmd);
     int i = 0;
     while (ss >> cmd)
@@ -61,6 +62,7 @@ void    serverr::authenticate_client(std::string cmd, int socket_client, cliente
             return;
         // std::cout << "position = " << position << std::endl;
         std::string cmd_final = clienteref.get_recvline().substr(0 , position + 1);
+        std::cout << "cmd_final = " << cmd_final << std::endl;
         handeler_authen_and_commande(cmd_final, _index_client);
     }
     else
@@ -132,6 +134,7 @@ void    serverr::initializer_server(int  port, std::string pass, size_t &i)
                     // is a client here : is a handle new msg
                     int socket_client = vec_pollfd[i].fd;
                     std::string cmd = receive_cmd(socket_client, i);
+                    // std::cout << "cmd = " << cmd << std::endl;
                     // std::cout << "Message from client " << socket_client << ": " << cmd << std::endl;
                     cliente &client_ref = get_client_orgien(socket_client);
                     client_ref.set_recv_data(cmd);
@@ -158,7 +161,18 @@ std::string serverr::receive_cmd(int fd_client, size_t &_index_client)
         else
             perror("recv");
         close(fd_client); // close the socket if not present program infinite loop infoi click sur c
-        // removeClient(fd_client);
+        remove_Client(fd_client);
+        remove_From_Channel(fd_client);
+        _index_client--;
+        std::map<std::string, channels>::iterator it = channels_.begin();
+        while (it != channels_.end())
+        {
+            if (it->second.get_size_user() == 0)
+                it = channels_.erase(it);
+            else
+                ++it;
+        }
+        // std::cout << "heeeeeeeeere\n";
         return "";
     }
     buffer[bytes_received] = '\0'; // add null terminator if not present => display garbej value
@@ -212,4 +226,31 @@ std::string serverr::_time()
     char buffer[30];
     std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
     return std::string(buffer) + " (" + std::to_string(now) + ")";
+}
+
+void    serverr::remove_Client(int id)
+{
+    vec_client.erase(vec_client.begin() +id);
+}
+
+void serverr::remove_From_Channel(int client_fd)
+{
+    std::map<std::string, channels>::iterator it = channels_.begin();
+
+    for (; it != channels_.end(); it++)
+    {
+        std::map<std::pair<bool, int>, cliente> &users_map = it->second.get_map_user();
+        std::map<std::pair<bool, int>, cliente>::iterator iter = users_map.begin();
+        for (;iter != users_map.end(); ++iter)
+        {
+            if(client_fd == iter->second.get_client_fd())
+            {
+                
+                broadcastMessage(it->second, RPL_QUIT(iter->second.get_nickname(), host_ip, "good bye"), client_fd);
+                users_map.erase(iter);
+                it->second.set_size_users(-1);
+                break ;
+            }
+        }
+    }
 }

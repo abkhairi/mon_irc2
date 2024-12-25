@@ -2,14 +2,12 @@
 #include "client.hpp"
 
 
-
 void serverr::is_registre(cliente &client_, std::string time_)
 {
     send_msg_to_clinet(client_.get_client_fd(), RPL_WELCOME(client_.get_nickname(), client_.get_ip_addr_client()));
     send_msg_to_clinet(client_.get_client_fd(), RPL_YOURHOST(client_.get_nickname(), client_.get_ip_addr_client()));
     send_msg_to_clinet(client_.get_client_fd(), RPL_CREATED(client_.get_nickname(), client_.get_ip_addr_client(), time_));
     send_msg_to_clinet(client_.get_client_fd(), RPL_MYINFO(client_.get_nickname(), client_.get_ip_addr_client()));
-
 }
 
 
@@ -92,7 +90,8 @@ void serverr::handeler_authen_and_commande(std::string cmd_final,size_t &_index_
             else
             {
                 client_.set_flag_user(true);
-                client_.set_user(cmd_final);
+                client_.set_user(vec_of_commande[1]);
+                client_.set_realname(vec_of_commande[5]);
                 std::cout << "user is " << client_.get_user() << std::endl;
                 vec_of_commande.clear();
                 client_.set_authen();
@@ -105,13 +104,17 @@ void serverr::handeler_authen_and_commande(std::string cmd_final,size_t &_index_
         vec_of_commande.clear();
         return ;
     }
-    else
+    else 
     {
         if (vec_of_commande[0] == "pass" || vec_of_commande[0] == "user")
         {
             send_msg_to_clinet(client_.get_client_fd(), ERR_ALREADYREGISTERED(nick, host_ip));
             vec_of_commande.clear();
             return ;
+        }
+        else if(vec_of_commande[0] == "nick")
+        {
+            // change nick the user
         }
         else
         {

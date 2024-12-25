@@ -26,6 +26,7 @@
 #define RPL_MYINFO(nick, hostname)   ":" + hostname + " 004 " + nick + " :Host: " + hostname + ", Version: 1.0, User mode: none, Channel modes: o, t, k, i, l !\r\n"
 #define RPL_TOPIC(hostname, nick, channel, topic)                    ":" + hostname + " 332 " + nick + " " + channel + " :" + topic + "\r\n"
 #define RPL_TOPICWHOTIME(client, channel, nick, seter,username, setat)                      ":" + client + " 333 " + nick + " " + channel + " " + seter + "!~@oldschool_irc :" + setat + "\r\n"
+#define ERR_USERONCHANNEL(host,nick, channel)             ":" + host + " 443 " + nick + " " + channel + " :is already on channel\r\n"
 
 
 #define RPL_ENDOFNAMES(hostname, nick, channelname)                         ":" + hostname + " 366 " + nick + " " + channelname + " :END of /NAMES list\r\n"
@@ -40,9 +41,12 @@
 #define ERR_NOSUCHCHANNEL(hostname, channel, nick) ":" + hostname + " 403 " + nick + " " + channel + " :No such channel\r\n"
 
 
+#define RPL_INVITE(nick, username ,clienthostname, invited, channel)       ":" + nick + "!" + username + "@" + clienthostname + " INVITE " + invited + " :" + channel + "\r\n"
+
 #define ERR_NOTOP(hostname, channel) ":" + hostname + " 482 " + channel + " " + ":You're not a channel operator\r\n"
 #define ERR_NOSUCHNICK(hostname, channel, argument) ":" + hostname + " 401 " + channel + " " + argument + " :No such nick/channel\r\n"
 
+#define RPL_INVITING(hostname, inviting, invited, channel)                 ":" + hostname + " 341 " + inviting + " " + invited + " " + channel + " :Inviting " + invited + " to " + channel + "\r\n"
 
 #define RPL_KICK(nick, username, host, kicked, channel, commntaire) ":" + nick + "!" + "~" + username + "@" + host + " KICK " + channel + " " + kicked + " " + commntaire + "\r\n"
 
@@ -52,6 +56,9 @@
 #define ERR_NOTONCHANNEL(client, channel)            "442 " + client + " " + channel + " :You're not on that channel\r\n"
 #define ERR_CHANOPRIVSNEEDED(buffer, channel)                               ":" + buffer + " 482 " + channel + " :You're not channel operator\r\n"
 #define RPL_NEWTOPICSETTED(nick, username, hostname, channel, topic)        ":" + nick + "!~" + username + "@" + hostname + " TOPIC " + channel + " " + topic + "\r\n"
+
+#define ERR_CANNOTSENDTOCHAN(buffer, channel)                               "404 " + buffer + " " + channel + " :Cannot send to channel\r\n"
+#define RPL_QUIT(nick, host, message)                                       ":" + nick + "!" + "~" + nick + "@" + host + " QUIT : " + message + "\r\n"
 
 // pourqoui \r\n
 #endif

@@ -15,6 +15,11 @@ bool channels::get_topic_bool()
     return (_topc);
 }
 
+void    channels::setinvited(int sockfd)
+{
+    _invited.push_back(sockfd);
+}
+
 std::string     channels::gettopicseter() {
     return topicseter;
 }

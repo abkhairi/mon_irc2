@@ -13,6 +13,7 @@ class cliente
         std::string _nickname;
         std::string _pass_client;
         std::string _user;
+        std::string _realname;
         bool        _flag_pass;
         bool        _flag_nick;
         bool        _flag_user;
@@ -32,6 +33,7 @@ class cliente
         bool        get_flag_user();
         std::string get_ip_addr_client();
         std::vector<std::string > get_chan_name();
+        std::string get_realname();
         //settter
         void        set_recv_data(std::string b);
         void        set_flag_pass(bool flag_pass);
@@ -40,6 +42,7 @@ class cliente
         void       set_nickname(std::string nickname);
         void      set_password(std::string pass);
         void      set_user(std::string user);
+        void    set_realname(std::string realname);
         void        set_authen();
         //
         void    pushChannel(std::string channel);

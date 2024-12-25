@@ -59,14 +59,19 @@ class serverr
         channels & getChannel(std::string channel);
         void    SendToAll(channels channel_, std::string _message);
         std::string  _time();
+        void    remove_Client(int id);
+        void    remove_From_Channel(int client_fd);
+        void    sendMessage(cliente &client, std::string reciever, std::string _message);
+
         // commande 
         void ft_join(std::vector<std::string> &vec_cmd,cliente &client_,size_t &_index_client);
         void kick(std::vector<std::string > vec_cmd,size_t _index_client, cliente client_);
         void topic(std::vector<std::string > vec_cmd,size_t _index_client,cliente client_);
+        void privmsg(std::vector<std::string > vec_cmd, size_t _indexclient, cliente client_);
+        void quit(std::vector<std::string > vec_cmd, size_t _indexclient, cliente client_);
+        void invite(std::vector<std::string > vec_cmd, size_t _indexclient, cliente client_);
 
 };
-
-
 
 
 int parsing_port_and_pass(std::string port, std::string pass);
@@ -74,7 +79,9 @@ void setNonBlocking(int fd) ;
 
 void send_msg_to_clinet(int fd_client, std::string mon_msg);
 std::string to_lower(std::string str);
-
-
-
+void print_name_channel(cliente client_);
+std::string get_str_channels(std::vector<std::string> v);
+std::string getListOfNames(std::map<std::pair<bool, int>, cliente> _users);
+void print_info_user(channels  &obj);
+void print_channel(std::map<std::string, channels> channels_);
 #endif

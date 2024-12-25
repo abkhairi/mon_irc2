@@ -17,7 +17,15 @@ std::vector<std::string > cliente::get_chan_name()
     return (channels);
 }
 
+void    cliente::set_realname(std::string realname)
+{
+   _realname = realname;
+}
 
+ std::string cliente::get_realname()
+ {
+    return (_realname);
+ }
 
 std::string cliente::get_recvline()
 {
@@ -111,5 +119,6 @@ void      cliente::set_password(std::string pass)
 }
 void      cliente::set_user(std::string user)
 {
-    _user = user.substr(5, user.size() - 5);
+    // _user = user.substr(5, user.size() - 5);
+   _user = user;
 }
