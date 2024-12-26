@@ -1,6 +1,23 @@
 #include "client.hpp"
 
+ cliente::cliente()
+ {
+    _flag_pass = false;
+	_flag_nick = false;
+	_flag_user = false;
+    authenti = false;
+    _operator = false;
+ }
 
+cliente::cliente(int sockefd)
+{
+    client_sock_fd = sockefd;
+    _flag_pass = false;
+	_flag_nick = false;
+	_flag_user = false;
+    authenti = false;
+    _operator = false;
+}
 
 void    cliente::pushChannel(std::string channel) 
 {

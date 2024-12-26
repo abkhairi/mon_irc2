@@ -63,9 +63,10 @@ class serverr
         void    remove_Client(int id);
         void    remove_From_Channel(int client_fd);
         void    sendMessage(cliente &client, std::string reciever, std::string _message);
-        int     modeSplit(std::string vec_cmd, size_t index, cliente client_);
+        int     modeSplit(std::string vec_cmd, cliente client_); 
         void    eraseChannel(std::string _name);
-        // int     checkNick(cliente& client);
+        int     checkNick(cliente& client);
+        int     parsNick(cliente& client);
 
         // commande 
         void ft_join(std::vector<std::string> &vec_cmd,cliente &client_,size_t &_index_client);

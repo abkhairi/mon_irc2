@@ -6,7 +6,7 @@
 class cliente
 {
     private :
-        int client_sock_fd;
+        int         client_sock_fd;
         std::string ip_addr_client;
         std::string recvdata;
         bool         authenti;
@@ -17,10 +17,14 @@ class cliente
         bool        _flag_pass;
         bool        _flag_nick;
         bool        _flag_user;
+        bool		_operator;
         std::vector<std::string> channels;
     public :
         cliente(int _client_sock_fd, std::string _ip_addr_client);
         void          display_client();
+        cliente(int sockefd);
+        cliente();
+
         // getter
         int         get_client_fd();
         std::string get_recvline();

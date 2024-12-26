@@ -2,6 +2,42 @@
 #include "client.hpp"
 
 
+int serverr::parsNick(cliente& client) 
+{
+    std::string str = "@&#:1234567890"; //str contient les caractères interdits pour le premier caractère du nickname : @&#:1234567890.
+    for (size_t i = 0; i < vec_client.size(); i++) // in loop check if any client has the same nickname
+    {
+        if(vec_of_cmd[1] == vec_client[i].get_nickname()) 
+        {
+            client.set_flag_nick(false);
+            send_msg_to_clinet(client.get_client_fd(), ERR_NICKNAMEINUSE(vec_of_cmd[1]));
+            return 0; // nickname already in use
+        }
+    }
+    if (str.find(vec_of_cmd[1][0]) != std::string::npos)
+        client.set_flag_nick(false);
+    return 1; // nickname is valid
+}
+
+int serverr::checkNick(cliente& client) 
+{
+    // vec_of_cmd = nick abdo
+    std::string str = "@&#:1234567890"; //str contient les caractères interdits pour le premier caractère du nickname : @&#:1234567890.
+    std::string s = "_";
+    for(size_t i = 0; i < vec_client.size(); i++) // in loop check if any client has the same nickname
+    {
+        if (vec_of_cmd[1] == vec_client[i].get_nickname()) {
+            send_msg_to_clinet(client.get_client_fd(), ERR_NICKNAMEINUSE(vec_of_cmd[1]));
+            return 1; // nickname already in use
+        }
+    }
+    if (str.find(vec_of_cmd[1][0]) != std::string::npos)
+        return 0; // nickname is invalid :Le premier caractère du surnom est invalide.
+    if (s.find(vec_of_cmd[1][strlen(vec_of_cmd[1].c_str()) - 1]) != std::string::npos)
+        return 3; // nickname is invalid : Le dernier caractère du surnom est invalide
+    return 4; // nickname is valid
+}
+
 void serverr::is_registre(cliente &client_, std::string time_)
 {
     send_msg_to_clinet(client_.get_client_fd(), RPL_WELCOME(client_.get_nickname(), client_.get_ip_addr_client()));
@@ -68,7 +104,11 @@ void serverr::handeler_authen_and_commande(std::string cmd_final,size_t &_index_
         {
             // check if any client in vector has the same nickname ft_check_nickname()
             client_.set_flag_nick(true);
-            client_.set_nickname(vec_of_commande[1]);
+            int f = parsNick(client_);
+            if (client_.get_flag_nick())
+                client_.set_nickname(vec_of_commande[1]);
+            else if (f)
+                send_msg_to_clinet(client_.get_client_fd(), RPL_ERRONEUSNICKNAME(host_ip, client_.get_nickname()));
             vec_of_commande.clear();
             return ;
         }
@@ -106,6 +146,8 @@ void serverr::handeler_authen_and_commande(std::string cmd_final,size_t &_index_
     }
     else 
     {
+        cliente &x = get_client_by_index(_index_client - 1);
+
         if (vec_of_commande[0] == "pass" || vec_of_commande[0] == "user")
         {
             send_msg_to_clinet(client_.get_client_fd(), ERR_ALREADYREGISTERED(nick, host_ip));
@@ -114,34 +156,34 @@ void serverr::handeler_authen_and_commande(std::string cmd_final,size_t &_index_
         }
         else if(vec_of_commande[0] == "nick")
         {
-            // change nick the user
-            //  flag = 1;
-            // int res = checkNick(getClientitoByIndex(i-1));
-            // if (res == 0 || res == 1 || res == 3) 
-            // {
-            //     if (res == 0) 
-            //     {
-            //         sen(getClientitoByIndex(i-1).getClinetFd(), RPL_ERRONEUSNICKNAME(host, nick));
-            //     }
-            // }
-            // else
-            // {
-            //     if (args.size() < 2 || args[1] == ":")
-            //         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NONICKNAMEGIVEN(nick, host));
-            //     else 
-            //     {
-            //             std::string o = getClientitoByIndex(i-1).getNickName();
-            //             std::vector<std::string> vec = x.getChannels();
-            //             getClientitoByIndex(i-1).setNickName(args[1]);
-            //             std::vector<std::string>::iterator it = vec.begin();
-            //             for(; it != vec.end(); it++) {
-            //                 Channel & chan = getChannel(*it);
-            //                 chan.updateNickname(args[1],o,chan.getPrvBynickname(o), getClientitoByIndex(i-1));
-            //                 SendToAll(chan, NICKNAME_RPLY(o,getClientitoByIndex(i-1).getUserName(),host,args[1]));
-            //             }
-            //             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NICKCHANGE(o,args[1],host));
-            //     }
-            // }
+            // flag = 1;
+            int res = checkNick(get_client_by_index(_index_client-1));// check if deja un client avec le meme nickname
+            if (res == 0 || res == 1 || res == 3) 
+            {
+                if (res == 0) 
+                {
+                    send_msg_to_clinet(client_.get_client_fd(), RPL_ERRONEUSNICKNAME(host_ip, client_.get_nickname()));
+                }
+            }
+            else
+            {
+                if (vec_of_commande.size() < 2 || vec_of_commande[1] == ":")
+                    send_msg_to_clinet(client_.get_client_fd(), RPL_NONICKNAMEGIVEN(client_.get_nickname(), host_ip));
+                else 
+                {
+                        std::string oldNick = client_.get_nickname();
+                        std::vector<std::string> vec_of_name_chan = x.get_chan_name();
+                        get_client_by_index(_index_client - 1).set_nickname(vec_of_commande[1]);
+                        std::vector<std::string>::iterator it;
+                        for(it = vec_of_name_chan.begin(); it != vec_of_name_chan.end(); it++) 
+                        {
+                            channels &chan = getChannel(*it);
+                            chan.updateNickname(oldNick,  chan.check_if_operator(oldNick), get_client_by_index(_index_client - 1));
+                            SendToAll(chan, NICKNAME_RPLY(oldNick, client_.get_user(), host_ip, vec_of_commande[1]));
+                        }
+                        send_msg_to_clinet(client_.get_client_fd(), RPL_NICKCHANGE(oldNick ,vec_of_commande[1] ,host_ip));
+                }
+            }
         }
         else
         {
@@ -149,5 +191,8 @@ void serverr::handeler_authen_and_commande(std::string cmd_final,size_t &_index_
         }
         vec_of_commande.clear();
     }
-
 }
+
+
+
+
