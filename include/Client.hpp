@@ -43,7 +43,7 @@ class Client{
         std::string     getPass();
         std::string     getUser();
         std::string     getRealNm();
-        std::string     getIpAddrCli();
+        std::string&     getIpAddrCli();
         std::vector<std::string>getChNm();
         //:::::::::Setters:::::::::::::::
         void    setDataRec(std::string data);
@@ -55,6 +55,7 @@ class Client{
         void    setUser(std::string user);
         void    setRealNm(std::string rname);
         void    setAuth();
+        void    setipaddr(std::string _ip);
         bool        getAuth();
         bool        getFlgPass();
         bool        getFlgNick();

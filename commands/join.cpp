@@ -24,6 +24,8 @@ void Server::ft_join(std::vector<std::string> &vec_cmd, Client &client_, size_t 
     std::string name_channel;
     std::string password;
     std::string list_operator;
+    std::string hostTheServer = getCliByIdx(_index_client - 1).getIpAddrCli();
+    // std::cout << "host the server = " << hostTheServer << std::endl;
 
     while (std::getline(split_channel, name_channel, ',')){
         std::string name_chan_lower = to_lower(name_channel);
@@ -40,9 +42,9 @@ void Server::ft_join(std::vector<std::string> &vec_cmd, Client &client_, size_t 
             new_channel.setNmDisplay(name_channel);
             new_channel.setSizeUser(1);
             channels.insert(std::make_pair(name_chan_lower,new_channel));
-            sendMsgToCli(client_.getCliFd(), RPL_JOIN(nickname, nickname,name_channel, _hostIp));
-            sendMsgToCli(client_.getCliFd(), RPL_NAMREPLY(_hostIp, list_operator, name_channel, nickname));
-            sendMsgToCli(client_.getCliFd(), RPL_ENDOFNAMES(_hostIp, nickname, name_channel));
+            sendMsgToCli(client_.getCliFd(), RPL_JOIN(nickname, nickname,name_channel, hostTheServer));
+            sendMsgToCli(client_.getCliFd(), RPL_NAMREPLY(hostTheServer, list_operator, name_channel, nickname));
+            sendMsgToCli(client_.getCliFd(), RPL_ENDOFNAMES(hostTheServer, nickname, name_channel));
         }
         else if (it != channels.end()) // deja kyna channel
         {
@@ -76,14 +78,14 @@ void Server::ft_join(std::vector<std::string> &vec_cmd, Client &client_, size_t 
             // it->second.removeInvitedClient(clientfd);
             list_operator = getListOfNames(it->second.getMapUser());
             // send msg to client for entrer to channel
-            sendMsgToCli(client_.getCliFd(), RPL_JOIN(nickname, nickname, it->second.getNmChDispaly(), _hostIp));
+            sendMsgToCli(client_.getCliFd(), RPL_JOIN(nickname, nickname, it->second.getNmChDispaly(), hostTheServer));
             // send msg all client for any client entrer channel 
-            broadCastMsg(it->second, RPL_JOIN(nickname, nickname,it->second.getNmChDispaly(), _hostIp), client_.getCliFd());
+            broadCastMsg(it->second, RPL_JOIN(nickname, nickname,it->second.getNmChDispaly(), hostTheServer), client_.getCliFd());
             // diaplay list the client in channels par exmple : 353 hicham = #chan1 :idryab hicham @abkhairi
-            sendMsgToCli(client_.getCliFd(), RPL_NAMREPLY(_hostIp, list_operator, it->second.getNmChDispaly(), nickname));
+            sendMsgToCli(client_.getCliFd(), RPL_NAMREPLY(hostTheServer, list_operator, it->second.getNmChDispaly(), nickname));
             //Sent as a reply to the NAMES command, this numeric specifies the end of a list of channel member names.
-            sendMsgToCli(client_.getCliFd(), RPL_ENDOFNAMES(_hostIp, nickname, it->second.getNmChDispaly()));
-            broadCastMsg(it->second, RPL_ENDOFNAMES(_hostIp, nickname, it->second.getNmChDispaly()), client_.getCliFd());
+            sendMsgToCli(client_.getCliFd(), RPL_ENDOFNAMES(hostTheServer, nickname, it->second.getNmChDispaly()));
+            broadCastMsg(it->second, RPL_ENDOFNAMES(hostTheServer, nickname, it->second.getNmChDispaly()), client_.getCliFd());
             // send msg to client topic the channel = sujet de channel
             sendMsgToCli(client_.getCliFd(), RPL_TOPIC(_hostIp, nickname, it->second.getNmChDispaly(),it->second.getTopic()));
             // send msg to client specifically who set topic (sujet) the channel

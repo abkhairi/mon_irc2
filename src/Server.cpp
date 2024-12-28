@@ -197,7 +197,9 @@ void    Server::init_serv(int  port, std::string pass, size_t &i){
                         poollfd.revents = 0;
                     pollFdVec.push_back(poollfd);
                     std::string ipAddrCli = inet_ntoa(cli_addr.sin_addr);
+                    std::cout << "display ip addres client = " << ipAddrCli << std::endl;
                     Client obj_client(cli_fd, ipAddrCli);
+                    obj_client.setipaddr(ipAddrCli);
                     cliVec.push_back(obj_client);
                     std::cout << "New connection accepted: " << cli_fd << std::endl;
                 }

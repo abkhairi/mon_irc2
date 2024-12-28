@@ -36,7 +36,13 @@ Client::Client(int sockefd)
     _operator = false;
 }
 
-std::string Client::getIpAddrCli(){
+
+void    Client::setipaddr(std::string _ip)
+{
+    _ipAddrCli = _ip;
+}
+
+std::string& Client::getIpAddrCli(){
     return (_ipAddrCli);
 };
 
