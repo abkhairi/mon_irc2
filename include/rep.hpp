@@ -1,5 +1,17 @@
-#ifndef REPLY_MSG
-#define REPLY_MSG
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rep.hpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abkhairi <abkhairi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/23 21:02:22 by shamsate          #+#    #+#             */
+/*   Updated: 2024/12/26 16:31:09 by abkhairi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef REP_HPP
+#define REP_HPP
 
 
 #define RESET   "\033[0m"
@@ -84,5 +96,4 @@
 #define RPL_ALREADYSET(nickname)                                            (": 998 " + nickname + ": this Password already set\r\n")
 #define ERR_WASNOSUCHNICK(buffer,cmd)                                       ":" + buffer + " 406 " + cmd + " :There was no such nickname\r\n"
 
-// pourqoui \r\n
 #endif

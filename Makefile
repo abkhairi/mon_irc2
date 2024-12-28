@@ -1,30 +1,55 @@
-NAME = ircserv
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: shamsate <shamsate@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/12/23 21:00:51 by shamsate          #+#    #+#              #
+#    Updated: 2024/12/26 23:32:52 by shamsate         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+
+NAME   = ircserv
 
 CC     = c++
 
+HEADER =  include/Client.hpp  include/rep.hpp  include/Server.hpp include/Channels.hpp
+
+RM     = rm -rf
+
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRC    = main.cpp utilis.cpp client.cpp server.cpp authentication.cpp ft_handle_cmd.cpp channels.cpp \
-		./commande/kick.cpp ./commande/topic.cpp ./commande/join.cpp ./commande/privmsg.cpp \
-		./commande/quit.cpp ./commande/invite.cpp ./commande/mode.cpp ./commande/part.cpp \
-	
-OBJ    = $(SRC:.cpp=.o)
+FILES = main  src/Client  src/Server dependencies/UseFcnt src/HandleCmd  src/Authentification src/Channels\
+		commands/join commands/kick commands/topic commands/privmsg commands/part commands/quit\
+		commands/mode commands/invite\
 
- 
-%.o : %.cpp client.hpp server.hpp channels.hpp
-	$(CC) $(FLAGS) -c $< -o $@
+SRC		= $(FILES:=.cpp)
 
-all : $(NAME) $(OBJ)
+OBJ		= $(FILES:=.opp)
 
-$(NAME) : $(OBJ) channels.hpp client.hpp reply_msg.hpp server.hpp
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+all: $(NAME)
 
-clean :
-	rm -rf $(OBJ)
+$(NAME): $(OBJ) $(HEADER)
+		@echo "\n* Compilation Starting $(NAME) ... ✔️ *\n"
+		@ $(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+		@echo "* Execution ready. ✔️ *\n"
+
+%.opp: %.cpp $(HEADER)
+	@echo "* Making Object file $(notdir $@) from source file $(notdir $<) . ✔️ *\n"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	@ $(RM) $(OBJ)
+	@echo "\n* Removing object file .. ✔️ *\n"
+	@echo "* Object file Removed. ✔️ *\n"
 
 fclean: clean
-	rm -rf $(NAME)
+	@ $(RM) $(NAME)
+	@echo "* Removing $(NAME) .✔️ *\n"
+	@echo "* Removed. ✔️ *\n"
 
-re : fclean all
+re: fclean all
 
-.PHONY: clean
+.PHONY: clean%
